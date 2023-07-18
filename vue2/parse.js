@@ -1,6 +1,6 @@
-import { unicodeRegExp, makeMap } from '../vue2/util/index.js'
-const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z${unicodeRegExp.source}]*`
-const qnameCapture = `((?:${ncname}\\:)?${ncname})`
+import { makeMap } from '../vue2/util/index.js'
+const ncname = `[a-zA-Z_][\\-\\.0-9_a-zA-Z]*` // 以大写字母、小写字母或下划线开头 [a-zA-Z_]，后面可以跟随零个或多个连字符、点号、数字、下划线、大写字母或小写字母 [\\-\\.0-9_a-zA-Z]*
+const qnameCapture = `((?:${ncname}\\:)?${ncname})` // (?:${ncname}\\:)?表示匹配零个或一个冒号  ${ncname})表示匹配一个或多个字符的名称
 
 const startTagOpen = new RegExp(`^<${qnameCapture}`)
 const startTagClose = /^\s*(\/?)>/
@@ -8,7 +8,7 @@ const endTag = new RegExp(`^<\\/${qnameCapture}[^>]*>`)
 
 export const isPlainTextElement = makeMap('script,style,textarea', true)
 
-export function createASTElement(tag, attrs , parent) {
+export function createASTElement(tag, attrs, parent) {
   return {
     type: 1,
     tag,
@@ -55,7 +55,7 @@ function parse(template) {
       closeElement(element)
     },
     chars(text, start, end) {
-      if(!currentParent) return
+      if (!currentParent) return
       const children = currentParent.children
       if (text) {
         let child = {
@@ -184,7 +184,7 @@ function parseHtml(html, options) {
       pos = 0
     }
 
-    if(pos >= 0) {
+    if (pos >= 0) {
       for (let i = stack.length - 1; i >= pos; i--) {
         if (options.end) {
           options.end(stack[i].tag, start, end)
